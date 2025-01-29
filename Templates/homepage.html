@@ -4,7 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Run Jupyter Notebook</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <style>
+        .container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+#output {
+    margin-top: 20px;
+}
+
+pre {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: auto;
+    white-space: pre-wrap;
+    color: #333;
+}
+    </style>
+
 </head>
 <body>
 <div class="container">
@@ -15,6 +59,27 @@
         <pre id="outputContent">Click the button to execute the notebook...</pre>
     </div>
 </div>
-<script src="static/script.js"></script>
+<script>
+    document.getElementById("runButton").addEventListener("click", () => {
+const outputContent = document.getElementById("outputContent");
+
+// Clear previous output
+outputContent.textContent = "Running the notebook...";
+
+// Send a request to the Flask backend
+fetch("/run-face-recognition")
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            outputContent.textContent = `Error: ${data.error}`;
+        } else {
+            outputContent.textContent = "Notebook running started!";
+        }
+    })
+    .catch(error => {
+        outputContent.textContent = `Error: ${error}`;
+    });
+});
+</script>
 </body>
 </html>
